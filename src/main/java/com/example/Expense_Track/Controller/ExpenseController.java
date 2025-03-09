@@ -1,5 +1,6 @@
 package com.example.Expense_Track.Controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,8 +50,20 @@ public class ExpenseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Expense> deleteExpense() {
-        
-        return null;
+    public ResponseEntity<Void> deleteExpense(@PathVariable("id") String id) {
+        expenseService.deleteExpense(id);
+        return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/summary")
+    public String getTotalExpense() {
+        return "Summary: " + expenseService.getTotalExpense();
+    }
+
+    @GetMapping("/summary/{month}")
+    public BigDecimal getMonthlyExpense(@PathVariable("month") int month) {
+        return expenseService.getMonthlyExpense(month);
+    }
+
+
 }

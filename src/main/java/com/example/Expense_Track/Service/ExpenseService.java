@@ -1,6 +1,7 @@
 package com.example.Expense_Track.Service;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,5 +43,25 @@ public class ExpenseService {
             }).orElseThrow(() -> new RuntimeException("Expense not found"));
     }
 
+    public void deleteExpense(String id) {
+        expenseRepository.deleteById(id);
+    }
+
+    public BigDecimal getTotalExpense() {
+        return expenseRepository.findAll().stream()
+                .map(Expense::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getMonthlyExpense(int month) {
+        return expenseRepository.findAll().stream()
+                .filter(expense -> YearMonth.from(expense.getDate()).getMonthValue() == month)
+                .map(Expense::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public List<Expense> getExpensesByCategory(String category) {
+        return expenseRepository.findByCategory(category);
+    }
     
 }
