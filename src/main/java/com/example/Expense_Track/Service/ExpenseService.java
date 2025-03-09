@@ -1,6 +1,7 @@
 package com.example.Expense_Track.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,18 @@ public class ExpenseService {
     }
 
     public Expense addExpense(Expense expense) {
-        expense.setDate(LocalDate.now());
+        if (expense.getDescription() == null || expense.getDescription().trim().isEmpty()) {
+            throw new IllegalArgumentException("Description cannot be empty");
+        }
+    
+        if (expense.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than zero");
+        }
+    
+        if (expense.getDate() == null) {
+            expense.setDate(LocalDate.now());
+        }
+    
         return expenseRepository.save(expense);
     }
 
